@@ -8,6 +8,14 @@ import Start from './src/screens/Start';
 import Register from './src/screens/Register';
 import Chat from './src/screens/Chat';
 import MyProfile from './src/screens/MyProfile';
+import EditProfile from './src/screens/EditProfile';
+import EditPhoto from './src/screens/EditPhoto';
+import AddFriends from './src/screens/AddFriends';
+import ForgotPassword from './src/screens/ForgetPassword';
+import Contacts from './src/screens/Contacts';
+import DetailFriend from './src/screens/DetailFriend';
+import Messages from './src/screens/Message';
+import Maps from './src/screens/Maps';
 const AppNavigator = createStackNavigator(
   {
     Splash: {
@@ -19,6 +27,9 @@ const AppNavigator = createStackNavigator(
     Login: {
       screen: Login,
     },
+    ForgotPassword: {
+      screen: ForgotPassword,
+    },
     Register: {
       screen: Register,
     },
@@ -27,6 +38,27 @@ const AppNavigator = createStackNavigator(
     },
     MyProfile: {
       screen: MyProfile,
+    },
+    EditProfile: {
+      screen: EditProfile,
+    },
+    EditPhoto: {
+      screen: EditPhoto,
+    },
+    AddFriends: {
+      screen: AddFriends,
+    },
+    Contacts: {
+      screen: Contacts,
+    },
+    DetailFriend: {
+      screen: DetailFriend,
+    },
+    Messages: {
+      screen: Messages,
+    },
+    Maps: {
+      screen: Maps,
     },
   },
   {

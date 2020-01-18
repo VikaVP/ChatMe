@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
+  Alert,
+  FlatList,
 } from 'react-native';
 import firebase from '../config/config';
 import {
@@ -19,7 +21,6 @@ import {
   Thumbnail,
   Button,
 } from 'native-base';
-import Icon1 from 'react-native-vector-icons/MaterialIcons';
 import ActionButton from 'react-native-action-button';
 import {withNavigation, ScrollView} from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -28,25 +29,101 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-// import {ListItem} from 'react-native-elements';
+import {Bubbles} from 'react-native-loader';
 class Chat extends Component {
   constructor(prop) {
     super(prop);
     this.state = {
-      currentUser: null,
+      userList: [],
+      isLoading: false,
+      search: '',
     };
     this.logout = this.logout.bind(this);
   }
   logout = () => {
-    firebase.auth().signOut();
+    Alert.alert(
+      'Are you sure?',
+      'You must Login again to access your account',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: () =>
+            Alert.alert('Success!', 'See you soon', [
+              {
+                text: 'OK',
+                onPress: () => {
+                  firebase.auth().signOut() &&
+                    this.props.navigation.push('Start');
+                },
+              },
+            ]),
+        },
+      ],
+      {cancelable: false},
+    );
   };
   componentDidMount() {
-    console.log(this.props);
-    const {currentUser} = firebase.auth();
-    this.setState({currentUser});
+    const id = firebase.auth().currentUser.uid;
+    const db = firebase.database().ref('user/' + id);
+    db.once('value').then(data => {
+      const item = data.val();
+      let contact = [];
+      for (const key in item) {
+        if (key === 'contacts') {
+          for (const i in item[key]) {
+            contact.push(item[key][i]);
+          }
+        }
+      }
+      this.setState({
+        userList: contact,
+      });
+    });
+  }
+  firstSearch() {
+    const db = firebase.database().ref('/user');
+    this.searchDirectory(db);
+  }
+
+  searchDirectory(itemsRef) {
+    let search = this.state.search.toString();
+
+    if (search === '') {
+      this.listenForItems(itemsRef);
+    } else {
+      itemsRef
+        .orderByChild('user')
+        .startAt(search)
+        .endAt(search)
+        .on('value', snap => {
+          let items = [];
+          snap.forEach(child => {
+            items.push({
+              name: child.val().name,
+              photo: child.val().photo,
+              status: child.val().status,
+              phone: child.val().phone,
+            });
+          });
+          this.setState({
+            userList: items,
+          });
+        });
+    }
   }
   render() {
-    const {currentUser} = this.state;
+    const {isLoading} = this.state;
+    setTimeout(
+      function() {
+        this.setState({isLoading: true});
+      }.bind(this),
+      2000,
+    );
     return (
       <>
         <Header style={style.header}>
@@ -60,7 +137,7 @@ class Chat extends Component {
             </TouchableOpacity>
           </Left>
           <Body>
-            <Title style={style.title}>Chat History</Title>
+            <Title style={style.title}>Chat Room</Title>
           </Body>
           <Right style={style.headerRight}>
             <TouchableOpacity
@@ -81,6 +158,8 @@ class Chat extends Component {
             <TextInput
               // onChangeText={props.onChangeText}
               placeholder="Type here for search"
+              onChangeText={text => this.setState({search: text})}
+              onSubmitEditing={() => this.firstSearch()}
             />
             <Icon
               name="md-search"
@@ -90,52 +169,74 @@ class Chat extends Component {
             />
           </View>
         </View>
-        <View style={style.body}>
-          <View style={style.list}>
-            <List>
-              <ListItem avatar>
-                <Left>
-                  <Thumbnail source={require('../assets/disney5.jpg')} />
-                </Left>
-                <Body>
-                  <Text>Kumar Pratik</Text>
-                  <Text note>
-                    Doing what you like will always keep you happy . .
-                  </Text>
-                </Body>
-                <Right>
-                  <Text note>3:43 pm</Text>
-                </Right>
-              </ListItem>
-            </List>
+        <ScrollView>
+          <View style={style.body}>
+            {!isLoading ? (
+              <View style={style.loader}>
+                <Bubbles size={10} style={style.loadBuble} color="blue" />
+              </View>
+            ) : (
+              <FlatList
+                style={{flex: 1}}
+                data={this.state.userList}
+                renderItem={({item}) => (
+                  <View style={style.list}>
+                    <List>
+                      <ListItem avatar>
+                        <TouchableOpacity
+                          onPress={() => {
+                            this.props.navigation.push('Messages', {
+                              id: item.idFriend,
+                              name: item.name,
+                              photo: item.photo
+                                ? item.photo
+                                : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAQeOYC_Uqrxp5lVzs-DalVZJg3t6cCtAFyMHeI2NejPr1-TsUUQ&s',
+                              status: item.status,
+                            });
+                          }}>
+                          <Left>
+                            <Thumbnail
+                              source={
+                                item.photo
+                                  ? {uri: item.photo}
+                                  : require('../assets/dummy.jpg')
+                              }
+                            />
+                          </Left>
+                        </TouchableOpacity>
+                        <Body>
+                          <Text>{item.name}</Text>
+                          <Text note>{item.status}</Text>
+                        </Body>
+                      </ListItem>
+                    </List>
+                  </View>
+                )}
+                keyExtractor={item => item.idFriend.toString()}
+              />
+            )}
           </View>
-          <ActionButton buttonColor="rgba(231,76,60,1)">
-            <ActionButton.Item
-              buttonColor="#9b59b6"
-              title="New Chat"
-              onPress={() => alert('notes tapped!')}>
-              <Icon name="ios-chatbubbles" style={style.actionButtonIcon} />
-            </ActionButton.Item>
-            <ActionButton.Item
-              buttonColor="#3498db"
-              title="Add friend"
-              onPress={() => alert('add dong')}>
-              <Icon name="md-person-add" style={style.actionButtonIcon} />
-            </ActionButton.Item>
-            <ActionButton.Item
-              buttonColor="deeppink"
-              title="Contacts"
-              onPress={() => alert('add dong')}>
-              <Icon2 name="user-friends" style={style.actionButtonIcon} />
-            </ActionButton.Item>
-            <ActionButton.Item
-              buttonColor="#1abc9c"
-              title="Maps"
-              onPress={() => alert('maps yaa')}>
-              <Icon name="md-map" style={style.actionButtonIcon} />
-            </ActionButton.Item>
-          </ActionButton>
-        </View>
+        </ScrollView>
+        <ActionButton buttonColor="rgba(231,76,60,1)">
+          <ActionButton.Item
+            buttonColor="#3498db"
+            title="Add friend"
+            onPress={() => this.props.navigation.push('AddFriends')}>
+            <Icon name="md-person-add" style={style.actionButtonIcon} />
+          </ActionButton.Item>
+          <ActionButton.Item
+            buttonColor="#9b59b6"
+            title="Contacts"
+            onPress={() => this.props.navigation.push('Contacts')}>
+            <Icon2 name="user-friends" style={style.actionButtonIcon} />
+          </ActionButton.Item>
+          <ActionButton.Item
+            buttonColor="#1abc9c"
+            title="Maps"
+            onPress={() => this.props.navigation.push('Maps')}>
+            <Icon name="md-map" style={style.actionButtonIcon} />
+          </ActionButton.Item>
+        </ActionButton>
       </>
     );
   }
@@ -143,7 +244,7 @@ class Chat extends Component {
 export default withNavigation(Chat);
 const style = StyleSheet.create({
   body: {
-    flex: 1,
+    height: hp('100%'),
     backgroundColor: '#ffebcd',
   },
   header: {
@@ -158,6 +259,7 @@ const style = StyleSheet.create({
   },
   title: {
     alignSelf: 'center',
+    fontWeight: 'bold',
   },
   icon: {
     color: 'white',
@@ -185,6 +287,7 @@ const style = StyleSheet.create({
     paddingRight: wp('3%'),
     backgroundColor: 'white',
     marginHorizontal: wp('3%'),
+    marginTop: hp('2%'),
   },
   outer: {
     backgroundColor: '#ffebcd',
@@ -201,4 +304,10 @@ const style = StyleSheet.create({
   item: {
     backgroundColor: '#ffebcd',
   },
+  loader: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: hp('40%'),
+  },
+  loadBuble: {marginTop: hp('50%')},
 });

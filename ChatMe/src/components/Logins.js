@@ -14,21 +14,136 @@ import {
 } from 'react-navigation';
 import React, {Component, Fragment} from 'react';
 import PasswordInputText from 'react-native-hide-show-password-input';
-import {TextInput, Text, Image, StyleSheet, View, Alert} from 'react-native';
+import {
+  TextInput,
+  Text,
+  Image,
+  StyleSheet,
+  View,
+  Alert,
+  ToastAndroid,
+  PermissionsAndroid,
+} from 'react-native';
 import {Divider} from 'react-native-elements';
+import Geolocation from 'react-native-geolocation-service';
+const Toast = props => {
+  if (props.visible) {
+    ToastAndroid.showWithGravityAndOffset(
+      props.message,
+      ToastAndroid.LONG,
+      ToastAndroid.TOP,
+      1,
+      800,
+    );
+    return null;
+  }
+  return null;
+};
 class Login extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      latitude: '',
+      longitude: '',
+      errorMessage: null,
+      visible: false,
+    };
   }
-
+  async componentDidMount() {
+    console.warn(PermissionsAndroid);
+    try {
+      const granted = await PermissionsAndroid.check(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        Geolocation.getCurrentPosition(
+          position => {
+            const {latitude, longitude} = position.coords;
+            this.setState({latitude, longitude});
+          },
+          error => {
+            this.setState(
+              {
+                errorMessage: 'Check youre GPS',
+                visible: true,
+              },
+              () => {
+                this.hideToast();
+              },
+            );
+            return;
+          },
+          {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+        );
+      } else {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          Geolocation.getCurrentPosition(
+            position => {
+              const {latitude, longitude} = position.coords;
+              this.setState({latitude, longitude});
+            },
+            error => {
+              this.setState(
+                {
+                  errorMessage: 'Check your GPS',
+                  visible: true,
+                },
+                () => {
+                  this.hideToast();
+                },
+              );
+              return;
+            },
+            {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+          );
+        } else {
+          this.setState(
+            {
+              errorMessage: 'location denied',
+              visible: true,
+            },
+            () => {
+              this.hideToast();
+            },
+          );
+          return;
+        }
+      }
+    } catch (err) {
+      this.setState(
+        {
+          errorMessage: err,
+          visible: true,
+        },
+        () => {
+          this.hideToast();
+        },
+      );
+      return;
+    }
+  }
   getLogin = values => {
+    console.log(this.state);
+
     firebase
       .auth()
       .signInWithEmailAndPassword(values.email, values.password)
-      .then(() => {
+      .then(response => {
+        console.log(response.user.uid);
+        firebase
+          .database()
+          .ref('user/' + response.user.uid)
+          .update({
+            online: 'true',
+            latitude: this.state.latitude || null,
+            longitude: this.state.longitude || null,
+          });
         Alert.alert(
           'Success',
-          'You will redirect to your account',
+          'Welcome to Chatme',
           [
             {
               text: 'Cancel',
@@ -49,7 +164,11 @@ class Login extends Component {
         console.log('error ', error.message);
       });
   };
-
+  hideToast = () => {
+    this.setState({
+      visible: false,
+    });
+  };
   render() {
     return (
       <Formik
@@ -78,6 +197,10 @@ class Login extends Component {
           <Fragment>
             <ScrollView>
               <Container style={style.Login}>
+                <Toast
+                  visible={this.state.visible}
+                  message={this.state.errorMessage}
+                />
                 <View style={style.logo}>
                   <Image
                     source={require('../assets/136590391.png')}
@@ -109,7 +232,7 @@ class Login extends Component {
                   )}
                   <TouchableOpacity
                     onPress={() =>
-                      this.props.navigation.navigate('RequestForgotPassword')
+                      this.props.navigation.navigate('ForgotPassword')
                     }>
                     <Text style={style.forgot}>Forgot password ?</Text>
                   </TouchableOpacity>

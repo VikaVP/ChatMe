@@ -4,7 +4,7 @@ import Profile from '../components/MyProfile';
 const MyProfile = props => {
   return (
     <>
-      <Profile />
+      <Profile navigation={props.navigation} />
     </>
   );
 };
