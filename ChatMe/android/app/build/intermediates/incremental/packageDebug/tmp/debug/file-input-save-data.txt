@@ -1,5 +1,5 @@
 #Internal package file, do not edit.
-#Thu Jan 16 14:57:20 WIB 2020
+#Mon Jan 20 11:10:39 WIB 2020
 70.path=lib/arm64-v8a/libglog.so
 78.base=/home/vika/Documents/mapchat/android/app/build/intermediates/transforms/mergeJniLibs/debug/0
 84.path=lib/armeabi-v7a/libjsinspector.so
@@ -19,7 +19,7 @@
 56.set=ASSET
 67.path=lib/x86/libjsc.so
 81.base=/home/vika/Documents/mapchat/android/app/build/intermediates/transforms/mergeJniLibs/debug/0
-16.base=/home/vika/Documents/mapchat/android/app/build/intermediates/merged_assets/debug/out
+16.base=/home/vika/Documents/mapchat/android/app/build/intermediates/transforms/mergeJniLibs/debug/0
 53.path=lib/x86/libyoga.so
 79.baseType=DIRECTORY
 48.set=NATIVE_RESOURCE
@@ -97,7 +97,7 @@
 49.baseType=DIRECTORY
 49.set=ASSET
 42.base=/home/vika/Documents/mapchat/android/app/build/intermediates/transforms/mergeJniLibs/debug/0
-15.path=lib/x86_64/libjsijniprofiler.so
+15.path=fonts/Roboto_medium.ttf
 24.baseType=DIRECTORY
 30.set=DEX
 24.base=/home/vika/Documents/mapchat/android/app/build/intermediates/transforms/mergeJniLibs/debug/0
@@ -125,7 +125,7 @@ count=85
 7.base=/home/vika/Documents/mapchat/android/app/build/intermediates/merged_assets/debug/out
 9.path=lib/x86_64/libglog.so
 63.set=NATIVE_RESOURCE
-16.path=fonts/Roboto_medium.ttf
+16.path=lib/x86_64/libjsijniprofiler.so
 52.baseType=DIRECTORY
 75.baseType=DIRECTORY
 4.baseType=DIRECTORY
@@ -185,7 +185,7 @@ count=85
 31.set=ASSET
 55.baseType=DIRECTORY
 2.base=/home/vika/Documents/mapchat/android/app/build/intermediates/transforms/mergeJniLibs/debug/0
-15.set=NATIVE_RESOURCE
+15.set=ASSET
 82.set=NATIVE_RESOURCE
 23.path=lib/x86_64/libjscexecutor.so
 73.baseType=DIRECTORY
@@ -246,7 +246,7 @@ count=85
 19.baseType=DIRECTORY
 12.set=ASSET
 8.baseType=DIRECTORY
-15.base=/home/vika/Documents/mapchat/android/app/build/intermediates/transforms/mergeJniLibs/debug/0
+15.base=/home/vika/Documents/mapchat/android/app/build/intermediates/merged_assets/debug/out
 55.set=ASSET
 58.path=lib/arm64-v8a/libnative-imagetranscoder.so
 83.baseType=DIRECTORY
@@ -297,7 +297,7 @@ count=85
 47.set=NATIVE_RESOURCE
 57.path=lib/armeabi-v7a/libnative-imagetranscoder.so
 59.set=NATIVE_RESOURCE
-16.set=ASSET
+16.set=NATIVE_RESOURCE
 81.set=NATIVE_RESOURCE
 46.path=lib/x86/libjsinspector.so
 70.baseType=DIRECTORY

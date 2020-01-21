@@ -81,7 +81,6 @@ export default class MyProfile extends Component {
     const id = firebase.auth().currentUser.uid;
     const db = firebase.database().ref('user/' + id);
     db.once('value').then(data => {
-      // data.val() is the dictionary with all your keys/values from the '/store' path
       const item = data.val();
       this.setState({
         photo: item.photo,

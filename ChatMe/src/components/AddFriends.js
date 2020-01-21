@@ -50,8 +50,8 @@ export default class AddFriends extends Component {
       photo: friend.photo || '',
       status: friend.status || '',
       email: friend.email,
-      latitude: friend.latitude,
-      longitude: friend.longitude,
+      latitude: friend.latitude || null,
+      longitude: friend.longitude || null,
     }) &&
       db.ref('user/' + idFriend + '/contacts').push({
         idFriend: id,
@@ -76,12 +76,11 @@ export default class AddFriends extends Component {
         const item = data.val();
         this.setState({
           name: item.name,
-          email: item.email,
           photo: item.photo,
           status: item.status,
           phone: item.phone,
-          latitude: item.latitude,
-          longitude: item.longitude,
+          latitude: item.latitude || -6.226407,
+          longitude: item.longitude || 106.852069,
         });
       });
   }

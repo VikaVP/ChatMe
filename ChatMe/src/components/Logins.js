@@ -50,7 +50,6 @@ class Login extends Component {
     };
   }
   async componentDidMount() {
-    console.warn(PermissionsAndroid);
     try {
       const granted = await PermissionsAndroid.check(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
@@ -138,8 +137,8 @@ class Login extends Component {
           .ref('user/' + response.user.uid)
           .update({
             online: 'true',
-            latitude: this.state.latitude || null,
-            longitude: this.state.longitude || null,
+            latitude: this.state.latitude || -6.226407,
+            longitude: this.state.longitude || 106.852069,
           });
         Alert.alert(
           'Success',
@@ -152,7 +151,7 @@ class Login extends Component {
             },
             {
               text: 'Ok',
-              onPress: () => this.props.navigation.navigate('Chat'),
+              onPress: () => this.props.navigation.push('Chat'),
             },
           ],
           {cancelable: false},
@@ -160,7 +159,7 @@ class Login extends Component {
       })
       .catch(error => {
         //error callback
-        alert(error);
+        alert('Account not found');
         console.log('error ', error.message);
       });
   };

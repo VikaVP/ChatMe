@@ -42,6 +42,7 @@ export default class EditProfile extends Component {
         phone: item.phone,
         status: item.status,
         email: item.email,
+        contacts: item.contacts || {},
       });
     });
   }

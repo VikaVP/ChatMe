@@ -157,8 +157,8 @@ class SignUp extends Component {
                   email: values.email,
                   status: '',
                   phone: '',
-                  latitude: this.state.latitude || null,
-                  longitude: this.state.longitude || null,
+                  latitude: this.state.latitude || -6.226407,
+                  longitude: this.state.longitude || 106.852069,
                   online: true,
                 })
                 .then(data => {

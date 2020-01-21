@@ -8,6 +8,7 @@ import {
   TextInput,
   Alert,
   FlatList,
+  Platform,
 } from 'react-native';
 import firebase from '../config/config';
 import {
@@ -21,6 +22,8 @@ import {
   Thumbnail,
   Button,
 } from 'native-base';
+import {request, PERMISSIONS} from 'react-native-permissions';
+import Geolocation from 'react-native-geolocation-service';
 import ActionButton from 'react-native-action-button';
 import {withNavigation, ScrollView} from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -37,6 +40,8 @@ class Chat extends Component {
       userList: [],
       isLoading: false,
       search: '',
+      latitude: null,
+      longitude: null,
     };
     this.logout = this.logout.bind(this);
   }
@@ -72,6 +77,14 @@ class Chat extends Component {
     const db = firebase.database().ref('user/' + id);
     db.once('value').then(data => {
       const item = data.val();
+      this.setState({
+        latitude: item.latitude || -6.226407,
+        longitude: item.longitude || 106.852069,
+      });
+    });
+    this.requestLocationPermissions(db);
+    db.once('value').then(data => {
+      const item = data.val();
       let contact = [];
       for (const key in item) {
         if (key === 'contacts') {
@@ -85,6 +98,35 @@ class Chat extends Component {
       });
     });
   }
+  requestLocationPermissions = async db => {
+    if (Platform === 'ios') {
+      let response = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+      if (response === 'granted') {
+        this.locateCurrentLocation(db);
+      }
+    } else {
+      let responsed = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+      if (responsed === 'granted') {
+        this.locateCurrentLocation(db);
+      }
+    }
+  };
+  locateCurrentLocation = db => {
+    Geolocation.getCurrentPosition(
+      position => {
+        console.log(position.coords);
+
+        db.update({
+          online: 'true',
+          latitude: parseFloat(position.coords.latitude) || this.state.latitude,
+          longitude:
+            parseFloat(position.coords.longitude) || this.state.longitude,
+        });
+      },
+      error => Alert.alert(error.message),
+      // {enableHighAccuracy: true, timeout: 10000, maximumAge: 1000},
+    );
+  };
   firstSearch() {
     const db = firebase.database().ref('/user');
     this.searchDirectory(db);

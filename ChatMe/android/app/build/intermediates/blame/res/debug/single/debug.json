@@ -1604,6 +1604,10 @@
         "source": "/home/vika/.gradle/caches/transforms-2/files-2.1/3bcfdaa067aaf588bb9d5d3deec57911/res/layout/notification_action_tombstone.xml"
     },
     {
+        "merged": "/home/vika/Documents/mapchat/android/app/build/intermediates/res/merged/debug/mipmap-ldpi_ic_launcher.png.flat",
+        "source": "/home/vika/Documents/mapchat/android/app/src/main/res/mipmap-ldpi/ic_launcher.png"
+    },
+    {
         "merged": "/home/vika/Documents/mapchat/android/app/build/intermediates/res/merged/debug/layout_notification_media_action.xml.flat",
         "source": "/home/vika/.gradle/caches/transforms-2/files-2.1/2b872cee2a39380f5bd95087772af82e/res/layout/notification_media_action.xml"
     },
