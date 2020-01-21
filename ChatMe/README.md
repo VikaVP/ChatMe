@@ -88,7 +88,7 @@ See the [open issues](https://github.com/VikaVP/ChatMe/issues) for a list of pro
 <p align='center'>
   <span>
       <image width="200" src='../screenshoot/splash.png' />
-      <image width="200" src='../screenshoot/signin.png' />
+      <image width="200" src='../screenshoot/signup.png' />
       <image width="200" src='../screenshoot/intro.png' />
      
       
