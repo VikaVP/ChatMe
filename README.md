@@ -43,7 +43,8 @@
 
 ## About The Project
 
-This project is a project to make a real time chat application using react native and backend handled by firebase.
+ChatMe is a real time chat mobile application where users who have contacts in this application can send messages to each other privately one to one and have map to know friend list location.
+This application was created with React Native and Firebase.
 
 ### Built With
 
@@ -54,7 +55,7 @@ This section should list any major frameworks that you built your project using.
 - [React Native Navigator](https://reactnavigation.org/)
 - [Firebase](https://firebase.google.com/docs?gclid=Cj0KCQiAvJXxBRCeARIsAMSkApo_78nKPQOiufR1R_DyJA3z2-OtOo9p2ffIGjpnlcnOJRGZ_lmwqN8aApDaEALw_wcB)
 - [React Native Image Picker](https://github.com/react-native-community/react-native-image-picker)
-
+- [React Native Maps](https://github.com/react-native-community/react-native-maps)
 <!-- GETTING STARTED -->
 
 ## Getting Started
