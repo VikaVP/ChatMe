@@ -23,6 +23,8 @@
   </p>
 </p>
 
+[![React Native](https://img.shields.io/badge/ReactNative-0.60-blue)](https://facebook.github.io/react-native/)
+
 <!-- TABLE OF CONTENTS -->
 
 ## Table of Contents
