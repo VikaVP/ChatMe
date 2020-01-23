@@ -114,7 +114,6 @@ See the [open issues](https://github.com/VikaVP/ChatMe/issues) for a list of pro
 </p>
 <p align='center'>
   <span>
-      <image width="200" src='./screenshoot/photo.png' />
         <image width="200" src='./screenshoot/message.png' />
       <image width="200" src='./screenshoot/profile.png' />
 
@@ -123,17 +122,8 @@ See the [open issues](https://github.com/VikaVP/ChatMe/issues) for a list of pro
 
 <p align='center'>
   <span>
-      <image width="200" src='./screenshoot/edit.png' />
-        <image width="200" src='./screenshoot/addfriend.png' />
-<image width="200" src='./screenshoot/contacts.png' />
-      
-  </span>
-</p>
-<p align='center'>
-  <span>
       <image width="200" src='./screenshoot/chat.png' />
         <image width="200" src='./screenshoot/map.png' />
-<image width="200" src='./screenshoot/detail.png' />
       
   </span>
 </p>
